@@ -1,8 +1,10 @@
 FROM alpine
 MAINTAINER rnd.mate00
 RUN apk add openjdk11
-ENTRYPOINT "top"
+COPY containerized-spring-app-0.0.1-SNAPSHOT.jar /opt/
+CMD ["/usr/bin/java", "-jar", "/opt/containerized-spring-app-0.0.1-SNAPSHOT.jar"]
 
 # build this with:
 # docker build --tag alpine-openjdk11 .
 # docker run --name=alpinejava alpine-openjdk11
+# docker run --rm -it alpine-openjdk11 /bin/ash # temporairly enter shell and remove container upon exit
