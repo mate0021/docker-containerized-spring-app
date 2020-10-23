@@ -1,6 +1,9 @@
 FROM alpine
 MAINTAINER rnd.mate00
 RUN apk add openjdk11
+# better not run as root
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
 COPY containerized-spring-app-0.0.1-SNAPSHOT.jar /opt/
 CMD ["/usr/bin/java", "-jar", "/opt/containerized-spring-app-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8081
