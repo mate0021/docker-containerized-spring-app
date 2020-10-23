@@ -23,3 +23,9 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+bootJar {
+	layered {
+		enabled = true
+	}
+}
