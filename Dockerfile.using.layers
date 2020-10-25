@@ -1,0 +1,32 @@
+# this part will copy fat jar and explode its contents (layers)
+FROM alpine as builder
+MAINTAINER rnd.mate00
+RUN apk add openjdk11
+WORKDIR application
+COPY build/libs/containerized-spring-app-0.0.1-SNAPSHOT.jar .
+RUN java -Djarmode=layertools -jar *.jar extract
+
+FROM alpine
+RUN apk add openjdk11
+WORKDIR application
+COPY --from=builder application/dependencies .
+COPY --from=builder application/snapshot-dependencies .
+COPY --from=builder application/spring-boot-loader .
+COPY --from=builder application/application .
+
+# better not run as root
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+EXPOSE 8081
+
+
+# to check layers:
+# java -Djarmode=layertools -jar build/libs/containerized-spring-app-0.0.1-SNAPSHOT.jar
+
+# first create layered jar
+# gradle --info bootJar
+
+# then build this image
+# docker build --tag mate00/alpine-openjdk11 -f Dockerfile.using.layers .
