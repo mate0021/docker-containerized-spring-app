@@ -30,3 +30,6 @@ EXPOSE 8081
 
 # then build this image
 # docker build --tag mate00/alpine-openjdk11 -f Dockerfile.using.layers .
+
+# to pass env variable to application
+# docker run -e "spring.profiles.active=uat" --publish=8081:8081 mate00/alpine-openjdk11
