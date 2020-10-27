@@ -19,6 +19,7 @@ RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+# ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} org.springframework.boot.loader.JarLauncher"]
 EXPOSE 8081
 
 
@@ -33,3 +34,6 @@ EXPOSE 8081
 
 # to pass env variable to application
 # docker run -e "spring.profiles.active=uat" --publish=8081:8081 mate00/alpine-openjdk11
+
+# to set log level on a certain class
+# docker run --rm --publish=8081:8081 -e "spring.profiles.active=uat" -e "logging.level.rnd.mate00.containerizedspringapp=DEBUG" mate00/alpine-openjdk11
