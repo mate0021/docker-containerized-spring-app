@@ -8,15 +8,16 @@ RUN java -Djarmode=layertools -jar *.jar extract
 
 FROM alpine
 RUN apk add openjdk11
+
+# better not run as root
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
 WORKDIR application
 COPY --from=builder application/dependencies .
 COPY --from=builder application/snapshot-dependencies .
 COPY --from=builder application/spring-boot-loader .
 COPY --from=builder application/application .
-
-# better not run as root
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 # ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} org.springframework.boot.loader.JarLauncher"]
